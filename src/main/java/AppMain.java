@@ -176,13 +176,10 @@ public class AppMain {
                     ConsoleUtils.printVertexAsReader(v),
                     g.V(v).out().toList().size());
         }
-        HashMap<String, Integer> sortedMap = readersToBorrowed.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
         System.out.println(String.format("%13s | %-100s", "Wypożyczenia", "Czytelnik"));
         System.out.println(String.format("%116s", "-").replace(" ", "-"));
-        for (String s: sortedMap.keySet()) {
-            System.out.println(String.format("%13s | %-100s", sortedMap.get(s), s));
+        for (String s: readersToBorrowed.keySet()) {
+            System.out.println(String.format("%13s | %-100s", readersToBorrowed.get(s), s));
         }
     }
 
@@ -193,7 +190,10 @@ public class AppMain {
         List<Vertex> allBooksFromPublisher = g.V().hasLabel(Book.LABEL.getKey()).has(Book.PUBLISHER.getKey(), publisher).toList();
         if (allBooksFromPublisher.isEmpty()) {
             System.out.println("Nie znaleziono żadnych książek tego wydawnictwa.");
-            return;
+        } else {
+            for (Vertex b: allBooksFromPublisher) {
+                System.out.println(ConsoleUtils.printVertexAsBook(b));
+            }
         }
     }
 
